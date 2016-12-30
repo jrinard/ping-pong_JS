@@ -1,16 +1,19 @@
-////----- Optimizes our code and packages it up in a format that the browser can understand.
-//It is also in charge or using all the other npm packages
+////----- Optimizes our FRONT-END code and packages it up in a format that the browser can understand.
+//gulp is in charge of using all the other npm packages
 
-//requiring the PACKAGES - assuming this was installed via terminal with npm install gulp-concat --save-dev
+//PACKAGES//----- Requiring the PACKAGES - assuming this was installed via terminal with npm install gulp-concat --save-dev
 var gulp = require('gulp');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
+var uglify = require('gulp-uglify');//minify
+var utilities = require('gulp-util'); // environmental variable for specifying production of development
+var del = require('del'); // clean tasks
+
+var buildProduction = utilities.env.production; //tells what kind of environment we are using. part of gulp-util
 
 
-
-////----- JavaScript build TASKS go in the order concatInterface -> jsBrowserify -> minifyScripts.
+//TASKS//----- Build TASKS go in the order concatInterface -> jsBrowserify -> minifyScripts.
 
 // grabs multiple interface files and combines them into one.
 gulp.task('concatInterface', function() {
@@ -32,4 +35,18 @@ gulp.task("minifyScripts", ["jsBrowserify"], function(){ // minify is ran and pa
   return gulp.src("./build/js/app.js") // grabbing the appfile
     .pipe(uglify()) //calls uglify from above to gulp-uglify/minify app.js
     .pipe(gulp.dest("./build/js")); //specifying the destination to save the file
+});
+
+//deletes old tmp and build folders
+gulp.task("clean", function(){
+  return del(['build', 'tmp']); //passing an array of paths to delete
+});
+
+// builds production or dev version
+gulp.task("build", ['clean'], function(){
+  if (buildProduction) {
+    gulp.start('minifyScripts'); // builds production version
+  } else {
+    gulp.start('jsBrowserify'); // builds development version
+  }
 });
