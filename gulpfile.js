@@ -8,6 +8,7 @@ var gulp = require('gulp');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var concat = require('gulp-concat');
+var uglify = require('gulp-uglify');
 
 gulp.task('concatInterface', function() {
   return gulp.src(['./js/*-interface.js']) //pulls in all the files used in browser // also * is a wild card grabbing all
@@ -25,10 +26,9 @@ gulp.task('jsBrowserify', ['concatInterface'], function() { // jsBrowserify is a
 // reason for this is so when you run the index it pulls one file with all the code in it.
 
 
-// Example of gulp task
-// gulp.task('myTask', function(){
-//   console.log('hello gulp');
-// });
-
-
-// we are using gulp to run browserify to run concat
+// we are using gulp to run browserify to run concat to run minify
+gulp.task("minifyScripts", ["jsBrowserify"], function(){ // minify is ran and passes in browserify
+  return gulp.src("./build/js/app.js")
+    .pipe(uglify()) //uglify is what minify does
+    .pipe(gulp.dest("./build/js")); //specifying the destination
+});
