@@ -16,7 +16,7 @@ Calculator.prototype.pingPong = function(goal) { //ping pong being called on the
     }
   }
   return output;
-}
+};
 
 // all the functionality on this page is being packed into "Calculator" and then exported to "calculatorModule" for a global use.
 exports.calculatorModule = Calculator; // exports provided by node to export things from one file and brings them into another.

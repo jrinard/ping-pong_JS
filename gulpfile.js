@@ -9,6 +9,7 @@ var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');//minify
 var utilities = require('gulp-util'); // environmental variable for specifying production of development
 var del = require('del'); // clean tasks
+var jshint = require('gulp-jshint');//Js hint
 
 var buildProduction = utilities.env.production; //tells what kind of environment we are using. part of gulp-util
 
@@ -49,4 +50,11 @@ gulp.task("build", ['clean'], function(){
   } else {
     gulp.start('jsBrowserify'); // builds development version
   }
+});
+
+//js hint linter
+gulp.task('jshint', function(){
+  return gulp.src(['js/*.js']) // grabs all js files
+  .pipe(jshint()) //calls jshint from above
+  .pipe(jshint.reporter('default')); // reporter shows us our errors
 });
